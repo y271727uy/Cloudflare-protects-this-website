@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.cloudflare.mod;
 
 // This class is intentionally left empty.
 // You can add your own configuration options here if needed.
