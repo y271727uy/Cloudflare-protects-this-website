@@ -1,0 +1,5 @@
+# Cloudflare Protection Mod Config
+# Configuration for the Cloudflare Protection mod
+
+# Enable redirect on non-special dates when player disconnects
+enableNonSpecialDateRedirect = false

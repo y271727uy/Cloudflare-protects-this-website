@@ -1,6 +1,7 @@
 package com.cloudflare.mod;
 
 import com.mojang.logging.LogUtils;
+import com.cloudflare.mod.config.CloudflareConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,7 +13,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,6 +38,9 @@ public class CloudflareProtectionMod {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        
+        // Register config
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CloudflareConfig.SPEC, "cloudflare-protection.toml");
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -67,7 +73,7 @@ public class CloudflareProtectionMod {
             if (currentDate.getMonthValue() == 11 && currentDate.getDayOfMonth() == 18) {
                 // Open the Cloudflare error page
                 Util.getPlatform().openUri(URI.create("https://www.cloudflare.com/zh-cn/5xx-error-landing/?utm_source=errorcode_500&utm_campaign=maven.minecraftforge.net"));
-            } else if (wasDisconnected) {
+            } else if (wasDisconnected && CloudflareConfig.enableNonSpecialDateRedirect.get()) {
                 // For other dates, show the page when returning to server list after disconnection
                 Util.getPlatform().openUri(URI.create("https://www.cloudflare.com/zh-cn/5xx-error-landing/?utm_source=errorcode_500&utm_campaign=maven.minecraftforge.net"));
                 // Reset the flag
@@ -103,7 +109,7 @@ public class CloudflareProtectionMod {
             if (currentDate.getMonthValue() == 11 && currentDate.getDayOfMonth() == 18) {
                 // Open the Cloudflare error page
                 Util.getPlatform().openUri(URI.create("https://www.cloudflare.com/zh-cn/5xx-error-landing/?utm_source=errorcode_500&utm_campaign=maven.minecraftforge.net"));
-            } else {
+            } else if (CloudflareConfig.enableNonSpecialDateRedirect.get()) {
                 // For other dates, set the flag when disconnected (non-voluntary exit)
                 wasDisconnected = true;
             }

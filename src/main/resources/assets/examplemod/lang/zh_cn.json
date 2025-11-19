@@ -1,0 +1,4 @@
+{
+  "text.autoconfig.cloudflare-protection.title": "Cloudflare保护配置",
+  "text.autoconfig.cloudflare-protection.option.enableNonSpecialDateRedirect": "启用非特殊日期重定向"
+}
